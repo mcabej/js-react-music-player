@@ -8,4 +8,19 @@ const SAMPLE_MEDIA = [
   new Track(5, "/static/coverArt/red-panda.jpg", "Broken Hearted Girl", "IDK", "Album A", "/static/audio/Broken Hearted Girl.mp3"),
 ];
 
-export { SAMPLE_MEDIA };
+const shuffle = (array) => {
+  let newArray = array.slice();
+
+  for (let i = 0; i < Math.ceil(array.length / 2); i++) {
+    let randIndex1 = Math.round(Math.random() * (array.length - 1));
+    let randIndex2 = Math.round(Math.random() * (array.length - 1));
+
+    let temp = newArray[randIndex1];
+    newArray[randIndex1] = newArray[randIndex2];
+    newArray[randIndex2] = temp;
+  }
+
+  return newArray;
+};
+
+export { SAMPLE_MEDIA, shuffle };

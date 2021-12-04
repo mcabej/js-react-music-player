@@ -7,16 +7,14 @@ import * as serviceWorker from "./serviceWorker";
 
 // redux
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/lib/integration/react";
+import { PersistGate } from "redux-persist/integration/react";
 import { BrowserRouter } from "react-router-dom";
 import { store, persistor } from "./redux/store";
-// contexts
-import LoadingScreen from "./components/LoadingScreen";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+      <PersistGate persistor={persistor}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

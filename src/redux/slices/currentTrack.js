@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Track } from "../types";
+// import { store } from "../store";
 
 // ----------------------------------------------------------------------
 
@@ -8,6 +9,8 @@ const initialState = {
     playing: false,
     trackIndex: 0,
     trackProgress: 0,
+    playlist: 1,
+    shuffle: false,
     track: new Track(0, "", "", "", "", ""),
   },
 };
@@ -34,6 +37,16 @@ const slice = createSlice({
     setTrackProgress(state, action) {
       let newState = state;
       newState.data.trackProgress = action.payload;
+      state = newState;
+    },
+    setPlaylist(state, action) {
+      let newState = state;
+      newState.data.playlist = action.payload;
+      state = newState;
+    },
+    setShuffle(state, action) {
+      let newState = state;
+      newState.data.shuffle = action.payload;
       state = newState;
     },
   },
@@ -64,5 +77,17 @@ export function UpdateCurrent(data) {
 export function UpdateTrackProgress(data) {
   return async (dispatch) => {
     dispatch(slice.actions.setTrackProgress(data));
+  };
+}
+
+export function UpdatePlaylist(data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setPlaylist(data));
+  };
+}
+
+export function UpdateShuffle(data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setShuffle(data));
   };
 }

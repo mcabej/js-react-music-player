@@ -7,7 +7,6 @@ const initialState = {
   data: [
     {
       name: "",
-      shuffle: false,
       tracks: [new Track(0, "", "", "", "", "")],
     },
   ],

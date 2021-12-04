@@ -21,7 +21,6 @@ export default function App() {
   const theme = makeTheme("dark");
 
   dispatch(UpdatePlaylist({ name: "Sample", tracks: SAMPLE_MEDIA }));
-  dispatch(UpdatePlaylist({ name: "AnotherSample", tracks: SAMPLE_MEDIA }));
 
   useEffect(() => {
     window.addEventListener("popstate", function () {

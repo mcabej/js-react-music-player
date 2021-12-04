@@ -1,8 +1,8 @@
 import React from "react";
-import { PauseCircle, PlayCircle, Shuffle, SkipNext, SkipPrevious } from "@mui/icons-material";
+import { PauseCircle, PlayCircle, Shuffle, ShuffleOn, SkipNext, SkipPrevious } from "@mui/icons-material";
 import { IconButton, Stack } from "@mui/material";
 
-const Controls = ({ isPlaying, onPlayPauseClick, onPrevClick, onNextClick }) => {
+const Controls = ({ isPlaying, onPlayPauseClick, onPrevClick, onNextClick, isShuffle, onShuffle }) => {
   return (
     <Stack direction="row">
       <IconButton onClick={onPrevClick}>
@@ -20,9 +20,15 @@ const Controls = ({ isPlaying, onPlayPauseClick, onPrevClick, onNextClick }) => 
       <IconButton onClick={onNextClick}>
         <SkipNext />
       </IconButton>
-      <IconButton sx={{ marginLeft: 10 }}>
-        <Shuffle />
-      </IconButton>
+      {isShuffle ? (
+        <IconButton sx={{ marginLeft: 10 }} onClick={() => onShuffle(false)}>
+          <ShuffleOn />
+        </IconButton>
+      ) : (
+        <IconButton sx={{ marginLeft: 10 }} onClick={() => onShuffle(true)}>
+          <Shuffle />
+        </IconButton>
+      )}
     </Stack>
   );
 };

@@ -3,8 +3,10 @@ import { CardMedia, Paper, Slider, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateCurrent, UpdatePlaying, UpdateTrackProgress } from "../../redux/slices/currentTrack";
+import { UpdateCurrent, UpdatePlaying, UpdateTrackProgress, UpdateShuffle } from "../../redux/slices/currentTrack";
+import { UpdatePlaylist } from "../../redux/slices/playlist";
 import Controls from "./components/Controls";
+import { shuffle } from "../../utils/utils";
 
 const Cover = styled(Stack)({
   position: "absolute",
@@ -38,18 +40,13 @@ const Container = styled(Paper)({
 const Player = () => {
   const dispatch = useDispatch();
 
-  const playlist = useSelector((state) => state.playlist.data);
+  const playlistState = useSelector((state) => state.playlist.data);
+
   const currentTrack = useSelector((state) => state.currentTrack.data);
+  const { playing, track, trackIndex, trackProgress, playlist, shuffle } = currentTrack;
 
-  // remove this later -------
-  //   const testTrack = playlist[1].tracks[0];
-  //   useEffect(() => {
-  //     dispatch(UpdateCurrent({ playing: false, trackIndex: 0, trackProgress: 0, track: testTrack }));
-  //   }, []);
-  // --------------------------
+  const activePlaylist = playlistState[playlist];
 
-  const currentPlaylist = playlist[1];
-  const { playing, track, trackIndex, trackProgress } = currentTrack;
   const { ID, coverArt, title, artist, source } = track;
 
   // Refs
@@ -67,22 +64,43 @@ const Player = () => {
           playing: true,
           trackIndex: trackIndex - 1,
           trackProgress: 0,
-          track: playlist[1].tracks[trackIndex - 1],
+          playlist: playlistState.indexOf(activePlaylist),
+          track: activePlaylist.tracks[trackIndex - 1],
         })
       );
     }
   };
 
   const toNextTrack = () => {
-    if (trackIndex < playlist[1].tracks.length - 1) {
-      dispatch(UpdateCurrent({ playing: true, trackIndex: trackIndex + 1, trackProgress: 0, track: playlist[1].tracks[trackIndex + 1] }));
+    if (trackIndex < activePlaylist.tracks.length - 1) {
+      dispatch(
+        UpdateCurrent({
+          playing: true,
+          trackIndex: trackIndex + 1,
+          trackProgress: 0,
+          playlist: playlistState.indexOf(activePlaylist),
+          track: activePlaylist.tracks[trackIndex + 1],
+        })
+      );
     } else {
-      dispatch(UpdateCurrent({ playing: true, trackIndex: 0, trackProgress: 0, track: playlist[1].tracks[0] }));
+      dispatch(
+        UpdateCurrent({
+          playing: true,
+          trackIndex: 0,
+          trackProgress: 0,
+          playlist: playlistState.indexOf(activePlaylist),
+          track: activePlaylist.tracks[0],
+        })
+      );
     }
   };
 
   const toPlayPause = (bool) => {
     dispatch(UpdatePlaying(bool));
+  };
+
+  const toShuffle = (bool) => {
+    dispatch(UpdateShuffle(bool));
   };
 
   const startTimer = () => {
@@ -132,7 +150,7 @@ const Player = () => {
     };
   }, []);
 
-  // Handle setup when changing tracks
+  // Track index observer
   useEffect(() => {
     audioRef.current.pause();
     audioRef.current = new Audio(source);
@@ -149,6 +167,23 @@ const Player = () => {
     }
   }, [trackIndex]);
 
+  // Shuffle observer
+  useEffect(() => {
+    if (shuffle) {
+      let playlist = activePlaylist.tracks;
+      let currentIndex = trackIndex;
+      let currentTrack = track; // current track
+      let upper = playlist.slice(0, currentIndex);
+      let lower = playlist.slice(currentIndex + 1, playlist.length);
+
+      let withoutCurrent = upper.concat(lower);
+      withoutCurrent = shuffle ? shuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
+
+      // update playlist with current track on top
+      dispatch(UpdatePlaylist([currentTrack, ...withoutCurrent]));
+    }
+  }, [shuffle]);
+
   return (
     <Container elevation={3}>
       <Cover>
@@ -164,7 +199,14 @@ const Player = () => {
         onChange={(_, value) => onScrub(value)}
         onChangeCommitted={onScrubEnd}
       />
-      <Controls isPlaying={playing} onPlayPauseClick={toPlayPause} onPrevClick={toPrevTrack} onNextClick={toNextTrack} />
+      <Controls
+        isPlaying={playing}
+        onPlayPauseClick={toPlayPause}
+        onPrevClick={toPrevTrack}
+        onNextClick={toNextTrack}
+        isShuffle={shuffle}
+        onShuffle={toShuffle}
+      />
     </Container>
   );
 };

@@ -23,6 +23,7 @@ export default function App() {
     });
 
     dispatch(SetIsLoaded(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <ThemeProvider theme={theme}>{isLoaded ? <Router /> : <LoadingScreen />}</ThemeProvider>;

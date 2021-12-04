@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import { useLocation, useRoutes } from "react-router-dom";
+import React from "react";
+import { useRoutes } from "react-router-dom";
 // components
 import Layout from "../components/layout";
 import CreatePlaylist from "../components/playlist/CreatePlaylist";

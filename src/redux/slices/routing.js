@@ -25,17 +25,11 @@ const slice = createSlice({
 export default slice;
 
 // Actions
-export const {} = slice.actions;
-
-// ----------------------------------------------------------------------
-
 export function UpdatePath(path) {
   return async (dispatch) => {
     dispatch(slice.actions.setPath(path));
   };
 }
-
-// ----------------------------------------------------------------------
 
 export function SetIsLoaded(isLoaded) {
   return async (dispatch) => {

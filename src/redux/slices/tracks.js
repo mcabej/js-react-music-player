@@ -23,10 +23,3 @@ const slice = createSlice({
 
 // Reducer
 export default slice;
-
-// Actions
-export function UpdateTracks(track) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setTracks(track));
-  };
-}

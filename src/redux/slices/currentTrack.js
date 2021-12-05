@@ -1,17 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Track } from "../types";
-// import { store } from "../store";
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   data: {
-    playing: false,
+    shuffle: false,
+    isPlaying: false,
     trackIndex: 0,
     trackProgress: 0,
-    playlist: 1,
-    shuffle: false,
-    track: new Track(0, "", "", "", "", ""),
+    playlistIndex: 0,
   },
 };
 
@@ -19,19 +16,14 @@ const slice = createSlice({
   name: "tracks",
   initialState,
   reducers: {
-    setTrack(state, action) {
+    setCurrent(state, action) {
       let newState = state;
-      newState.data.track = action.payload;
+      newState.data = action.payload;
       state = newState;
     },
     setPlaying(state, action) {
       let newState = state;
-      newState.data.playing = action.payload;
-      state = newState;
-    },
-    setCurrent(state, action) {
-      let newState = state;
-      newState.data = action.payload;
+      newState.data.isPlaying = action.payload;
       state = newState;
     },
     setTrackProgress(state, action) {
@@ -41,7 +33,7 @@ const slice = createSlice({
     },
     setPlaylist(state, action) {
       let newState = state;
-      newState.data.playlist = action.payload;
+      newState.data.playlistIndex = action.payload;
       state = newState;
     },
     setShuffle(state, action) {
@@ -49,45 +41,13 @@ const slice = createSlice({
       newState.data.shuffle = action.payload;
       state = newState;
     },
+    setTrack(state, action) {
+      let newState = state;
+      newState.data.trackIndex = action.payload;
+      state = newState;
+    },
   },
 });
 
 // Reducer
 export default slice;
-
-// Actions
-export function UpdateTrack(track) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setTrack(track));
-  };
-}
-
-export function UpdatePlaying(isPlaying) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setPlaying(isPlaying));
-  };
-}
-
-export function UpdateCurrent(data) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setCurrent(data));
-  };
-}
-
-export function UpdateTrackProgress(data) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setTrackProgress(data));
-  };
-}
-
-export function UpdatePlaylist(data) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setPlaylist(data));
-  };
-}
-
-export function UpdateShuffle(data) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setShuffle(data));
-  };
-}

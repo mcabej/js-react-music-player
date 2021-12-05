@@ -16,6 +16,9 @@ const slice = createSlice({
   name: "playlist",
   initialState,
   reducers: {
+    removeFirstPlaylist(state) {
+      state.data.splice(0, 1);
+    },
     setPlaylist(state, action) {
       let newState = state;
       newState.data.push(action.payload);
@@ -26,10 +29,3 @@ const slice = createSlice({
 
 // Reducer
 export default slice;
-
-// Actions
-export function UpdatePlaylist(playlist) {
-  return async (dispatch) => {
-    dispatch(slice.actions.setPlaylist(playlist));
-  };
-}

@@ -1,12 +1,12 @@
 // components
-import { CardMedia, Paper, Slider, Stack, Typography } from "@mui/material";
+import { CardMedia, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateCurrent, UpdatePlaying, UpdateTrackProgress, UpdateShuffle } from "../../redux/slices/currentTrack";
-import { UpdatePlaylist } from "../../redux/slices/playlist";
+import { UpdatePlaying, UpdateTrack, UpdateTrackProgress } from "../../redux/actions/currentTrack";
+import { UpdatePlaylist } from "../../redux/actions/playlist";
 import Controls from "./components/Controls";
-import { shuffle } from "../../utils/utils";
+import ProgressBar from "./components/ProgressBar";
 
 const Cover = styled(Stack)({
   position: "absolute",
@@ -40,68 +40,24 @@ const Container = styled(Paper)({
 const Player = () => {
   const dispatch = useDispatch();
 
-  const playlistState = useSelector((state) => state.playlist.data);
-
+  // states
+  const playlist = useSelector((state) => state.playlist.data);
   const currentTrack = useSelector((state) => state.currentTrack.data);
-  const { playing, track, trackIndex, trackProgress, playlist, shuffle } = currentTrack;
 
-  const activePlaylist = playlistState[playlist];
-
-  const { ID, coverArt, title, artist, source } = track;
-
-  // Refs
+  // currently playing state
+  const { isPlaying, trackIndex, playlistIndex, shuffle, trackProgress } = currentTrack;
+  // currently active playlist
+  const activePlaylist = playlist[playlistIndex];
+  const { coverArt, title, artist, source } = activePlaylist.tracks[trackIndex];
+  // refs
   const audioRef = useRef(new Audio(source));
   const intervalRef = useRef();
   const isReady = useRef(false);
 
   const { duration } = audioRef.current;
 
-  // Functions to control audio
-  const toPrevTrack = () => {
-    if (trackIndex !== 0) {
-      dispatch(
-        UpdateCurrent({
-          playing: true,
-          trackIndex: trackIndex - 1,
-          trackProgress: 0,
-          playlist: playlistState.indexOf(activePlaylist),
-          track: activePlaylist.tracks[trackIndex - 1],
-        })
-      );
-    }
-  };
-
-  const toNextTrack = () => {
-    if (trackIndex < activePlaylist.tracks.length - 1) {
-      dispatch(
-        UpdateCurrent({
-          playing: true,
-          trackIndex: trackIndex + 1,
-          trackProgress: 0,
-          playlist: playlistState.indexOf(activePlaylist),
-          track: activePlaylist.tracks[trackIndex + 1],
-        })
-      );
-    } else {
-      dispatch(
-        UpdateCurrent({
-          playing: true,
-          trackIndex: 0,
-          trackProgress: 0,
-          playlist: playlistState.indexOf(activePlaylist),
-          track: activePlaylist.tracks[0],
-        })
-      );
-    }
-  };
-
-  const toPlayPause = (bool) => {
-    dispatch(UpdatePlaying(bool));
-  };
-
-  const toShuffle = (bool) => {
-    dispatch(UpdateShuffle(bool));
-  };
+  const onNext = () => dispatch(UpdateTrack(trackIndex + 1));
+  const onPrev = () => dispatch(UpdateTrack(trackIndex - 1));
 
   const startTimer = () => {
     // Clear any timers already running
@@ -109,38 +65,23 @@ const Player = () => {
 
     intervalRef.current = setInterval(() => {
       if (audioRef.current.ended) {
-        toNextTrack();
+        onNext();
       } else {
         dispatch(UpdateTrackProgress(audioRef.current.currentTime));
       }
     }, [1000]);
   };
 
-  const onScrub = (value) => {
-    // Clear any timers already running
-    clearInterval(intervalRef.current);
-    audioRef.current.currentTime = value;
-    dispatch(UpdateTrackProgress(audioRef.current.currentTime));
-  };
-
-  const onScrubEnd = () => {
-    // If not already playing, start
-    if (!playing) {
-      toPlayPause(true);
-    }
-    startTimer();
-  };
-
   // Play pause observer
   useEffect(() => {
-    if (playing) {
+    if (isPlaying) {
       audioRef.current.play();
       startTimer();
     } else {
       clearInterval(intervalRef.current);
       audioRef.current.pause();
     }
-  }, [playing]);
+  }, [isPlaying]);
 
   useEffect(() => {
     // Pause and clean up on unmount
@@ -159,7 +100,7 @@ const Player = () => {
 
     if (isReady.current) {
       audioRef.current.play();
-      toPlayPause(true);
+      dispatch(UpdatePlaying(true));
       startTimer();
     } else {
       // Set the isReady ref as true for the next pass
@@ -168,21 +109,21 @@ const Player = () => {
   }, [trackIndex]);
 
   // Shuffle observer
-  useEffect(() => {
-    if (shuffle) {
-      let playlist = activePlaylist.tracks;
-      let currentIndex = trackIndex;
-      let currentTrack = track; // current track
-      let upper = playlist.slice(0, currentIndex);
-      let lower = playlist.slice(currentIndex + 1, playlist.length);
+  //   useEffect(() => {
+  //     if (shuffle) {
+  //       let playlist = activePlaylist.tracks;
+  //       let currentIndex = trackIndex;
+  //       let currentTrack = track; // current track
+  //       let upper = playlist.slice(0, currentIndex);
+  //       let lower = playlist.slice(currentIndex + 1, playlist.length);
 
-      let withoutCurrent = upper.concat(lower);
-      withoutCurrent = shuffle ? shuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
+  //       let withoutCurrent = upper.concat(lower);
+  //       withoutCurrent = shuffle ? shuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
 
-      // update playlist with current track on top
-      dispatch(UpdatePlaylist([currentTrack, ...withoutCurrent]));
-    }
-  }, [shuffle]);
+  //       // update playlist with current track on top
+  //       dispatch(UpdatePlaylist([currentTrack, ...withoutCurrent]));
+  //     }
+  //   }, [shuffle]);
 
   return (
     <Container elevation={3}>
@@ -191,22 +132,8 @@ const Player = () => {
         <Typography variant="h6">{title}</Typography>
         <Typography variant="body2">{artist}</Typography>
       </Cover>
-      <Slider
-        value={trackProgress}
-        min={0}
-        step={1}
-        max={duration ? duration : `${duration}`}
-        onChange={(_, value) => onScrub(value)}
-        onChangeCommitted={onScrubEnd}
-      />
-      <Controls
-        isPlaying={playing}
-        onPlayPauseClick={toPlayPause}
-        onPrevClick={toPrevTrack}
-        onNextClick={toNextTrack}
-        isShuffle={shuffle}
-        onShuffle={toShuffle}
-      />
+      <ProgressBar duration={duration} audioRef={audioRef} intervalRef={intervalRef} startTimer={startTimer} />
+      <Controls onNext={onNext} onPrev={onPrev} />
     </Container>
   );
 };

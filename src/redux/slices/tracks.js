@@ -4,9 +4,7 @@ import { Track } from "../types";
 // ----------------------------------------------------------------------
 
 const initialState = {
-  data: {
-    tracks: [new Track(0, "", "", "", "", "")],
-  },
+  data: [new Track(0, "", "", "", "", "")],
 };
 
 const slice = createSlice({
@@ -15,7 +13,7 @@ const slice = createSlice({
   reducers: {
     setTracks(state, action) {
       let newState = state;
-      newState.data.tracks.push(action.payload);
+      newState.data.push(...action.payload);
       state = newState;
     },
   },

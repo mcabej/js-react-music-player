@@ -2,16 +2,16 @@ import React from "react";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 // material
-import { Stack } from "@mui/material";
+import { Stack, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const NavItem = styled("a")(({ active, lastItem }) => ({
   fontSize: 18,
-  color: active ? "#000" : "#c4c4c4",
+  color: active ? "#fff" : "#c4c4c4",
   padding: 10,
   textDecoration: "none",
-  borderRight: lastItem ? "none" : "1px solid #000",
   fontWeight: 500,
+  borderRadius: 3,
   "&:hover": {
     background: "#c4c4c4",
     cursor: "pointer",
@@ -28,7 +28,7 @@ const Navigation = () => {
   };
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" divider={<Divider orientation="vertical" style={{ height: "100%" }} />}>
       <NavItem onClick={() => navigate("/")} active={isActive("/")}>
         Playlist
       </NavItem>

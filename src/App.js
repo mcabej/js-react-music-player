@@ -6,6 +6,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import makeTheme from "./makeTheme";
 import { UpdatePlaylistIndex } from "./redux/actions/currentTrack";
 import { UpdatePlaylist } from "./redux/actions/playlist";
+import { UpdateTracks } from "./redux/actions/tracks";
 import { SetIsLoaded, UpdatePath } from "./redux/slices/routing";
 //redux
 import { store, useDispatch, useSelector } from "./redux/store";
@@ -16,10 +17,10 @@ import { SAMPLE_MEDIA } from "./utils/utils";
 
 // ----------------------------------------------------------------------
 (function () {
-  let playlist = store.getState().playlist;
-  // if (playlist.data[0].name === "") store.dispatch(RemoveFirstPlaylist());
   store.dispatch(UpdatePlaylist({ name: "Sample", tracks: SAMPLE_MEDIA }));
+  store.dispatch(UpdatePlaylist({ name: "Another Sample", tracks: SAMPLE_MEDIA.slice(1, 4) }));
   store.dispatch(UpdatePlaylistIndex(1));
+  store.dispatch(UpdateTracks(SAMPLE_MEDIA));
 })();
 
 export default function App() {

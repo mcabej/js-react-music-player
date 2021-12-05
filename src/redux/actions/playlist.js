@@ -7,6 +7,12 @@ export function UpdatePlaylist(playlist) {
   };
 }
 
+export function UpdatePlaylistTracks(data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setPlaylistTracks(data));
+  };
+}
+
 export function RemoveFirstPlaylist() {
   return async (dispatch) => {
     dispatch(slice.actions.setPlaylist());

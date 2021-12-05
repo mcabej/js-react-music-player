@@ -5,14 +5,21 @@ import { useLocation } from "react-router-dom";
 import Playlist from "./playlist/Playlist";
 import Navigation from "./Navigation";
 import Player from "../components/player/Player";
-import { Stack } from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const Main = styled("div")({});
+const Main = styled("div")({
+  boxSizing: "border-box",
+  padding: 10,
+});
 
 const Container = styled(Stack)({
   display: "flex",
   boxSizing: "border-box",
+  backgroundColor: "#0A1929",
+  color: "#fff",
+  height: "100vh",
+  padding: 10,
 });
 
 const Layout = () => {

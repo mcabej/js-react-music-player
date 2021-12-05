@@ -4,9 +4,10 @@ import { styled } from "@mui/material/styles";
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdatePlaying, UpdateTrack, UpdateTrackProgress } from "../../redux/actions/currentTrack";
-import { UpdatePlaylist } from "../../redux/actions/playlist";
+import { UpdatePlaylist, UpdatePlaylistTracks } from "../../redux/actions/playlist";
 import Controls from "./components/Controls";
 import ProgressBar from "./components/ProgressBar";
+import { shuffle as onShuffle } from "../../utils/utils";
 
 const Cover = styled(Stack)({
   position: "absolute",
@@ -26,6 +27,7 @@ const CoverMedia = styled(CardMedia)({
 const Container = styled(Paper)({
   position: "fixed",
   bottom: 0,
+  left: 0,
   width: "100vw",
   height: 220,
   display: "flex",
@@ -34,7 +36,6 @@ const Container = styled(Paper)({
   alignItems: "center",
   padding: 20,
   boxSizing: "border-box",
-  background: "#3e3e3e",
 });
 
 const Player = () => {
@@ -87,6 +88,7 @@ const Player = () => {
     // Pause and clean up on unmount
     return () => {
       audioRef.current.pause();
+      dispatch(UpdatePlaying(false));
       clearInterval(intervalRef.current);
     };
   }, []);
@@ -109,21 +111,22 @@ const Player = () => {
   }, [trackIndex]);
 
   // Shuffle observer
-  //   useEffect(() => {
-  //     if (shuffle) {
-  //       let playlist = activePlaylist.tracks;
-  //       let currentIndex = trackIndex;
-  //       let currentTrack = track; // current track
-  //       let upper = playlist.slice(0, currentIndex);
-  //       let lower = playlist.slice(currentIndex + 1, playlist.length);
+  useEffect(() => {
+    if (shuffle) {
+      let playlist = activePlaylist.tracks;
+      let currentIndex = trackIndex;
+      let currentTrack = activePlaylist.tracks[currentIndex]; // current track
+      let upper = playlist.slice(0, currentIndex);
+      let lower = playlist.slice(currentIndex + 1, playlist.length);
 
-  //       let withoutCurrent = upper.concat(lower);
-  //       withoutCurrent = shuffle ? shuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
+      let withoutCurrent = upper.concat(lower);
+      withoutCurrent = shuffle ? onShuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
 
-  //       // update playlist with current track on top
-  //       dispatch(UpdatePlaylist([currentTrack, ...withoutCurrent]));
-  //     }
-  //   }, [shuffle]);
+      // update playlist with current track on top
+      dispatch(UpdatePlaylistTracks({ index: playlistIndex, tracks: [currentTrack, ...withoutCurrent] }));
+      dispatch(UpdateTrack(0));
+    }
+  }, [shuffle]);
 
   return (
     <Container elevation={3}>

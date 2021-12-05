@@ -24,6 +24,11 @@ const slice = createSlice({
       newState.data.push(action.payload);
       state = newState;
     },
+    setPlaylistTracks(state, action) {
+      let newState = state;
+      newState.data[action.payload.index].tracks = action.payload.tracks;
+      state = newState;
+    },
   },
 });
 

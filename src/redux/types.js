@@ -17,7 +17,7 @@ function Track(trackID, coverArt, title, artist, album, source) {
   /**@readonly */
   this.artist = artist;
   /** @readonly*/
-  this.source = album;
+  this.album = album;
   /** @readonly*/
   this.source = source;
 

@@ -1,10 +1,11 @@
 import { Button, ButtonBase, Card, Container, Paper, Typography } from "@mui/material";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router";
+import { UpdatePlaylistIndex } from "../../redux/actions/currentTrack";
 
-const PlaylistContainer = styled(ButtonBase)({
+const PlaylistButton = styled(ButtonBase)({
   width: "100%",
   borderRadius: 1,
   fontSize: 14,
@@ -21,8 +22,14 @@ const PlaylistItem = styled(Paper)({
 });
 
 const Playlist = () => {
-  const playlist = useSelector((state) => state.playlist.data).filter((obj) => obj.name !== "");
+  const playlist = useSelector((state) => state.playlist.data);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const selectPlaylist = (index) => {
+    dispatch(UpdatePlaylistIndex(index));
+  };
+
   return (
     <Container sx={{ p: 0 }}>
       <Button size="small" variant="contained" onClick={() => navigate("/new")}>
@@ -30,12 +37,16 @@ const Playlist = () => {
       </Button>
       {playlist.map((obj) => {
         return (
-          <PlaylistContainer>
-            <PlaylistItem>
-              <Typography>{obj.name}</Typography>
-              <Typography variant="body2">{obj.tracks.length} songs</Typography>
-            </PlaylistItem>
-          </PlaylistContainer>
+          <>
+            {obj.name !== "" && (
+              <PlaylistButton onClick={() => selectPlaylist(playlist.indexOf(obj))}>
+                <PlaylistItem>
+                  <Typography>{obj.name}</Typography>
+                  <Typography variant="body2">{obj.tracks.length} songs</Typography>
+                </PlaylistItem>
+              </PlaylistButton>
+            )}
+          </>
         );
       })}
     </Container>

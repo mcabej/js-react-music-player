@@ -112,20 +112,18 @@ const Player = () => {
 
   // Shuffle observer
   useEffect(() => {
-    if (shuffle) {
-      let playlist = activePlaylist.tracks;
-      let currentIndex = trackIndex;
-      let currentTrack = activePlaylist.tracks[currentIndex]; // current track
-      let upper = playlist.slice(0, currentIndex);
-      let lower = playlist.slice(currentIndex + 1, playlist.length);
+    let playlist = activePlaylist.tracks;
+    let currentIndex = trackIndex;
+    let currentTrack = activePlaylist.tracks[currentIndex]; // current track
+    let upper = playlist.slice(0, currentIndex);
+    let lower = playlist.slice(currentIndex + 1, playlist.length);
 
-      let withoutCurrent = upper.concat(lower);
-      withoutCurrent = shuffle ? onShuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
+    let withoutCurrent = upper.concat(lower);
+    withoutCurrent = shuffle ? onShuffle(withoutCurrent) : withoutCurrent.sort((first, second) => first.ID < second.ID);
 
-      // update playlist with current track on top
-      dispatch(UpdatePlaylistTracks({ index: playlistIndex, tracks: [currentTrack, ...withoutCurrent] }));
-      dispatch(UpdateTrack(0));
-    }
+    // update playlist with current track on top
+    dispatch(UpdatePlaylistTracks({ index: playlistIndex, tracks: [currentTrack, ...withoutCurrent] }));
+    dispatch(UpdateTrack(0));
   }, [shuffle]);
 
   return (

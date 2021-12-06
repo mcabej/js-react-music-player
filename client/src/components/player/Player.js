@@ -1,17 +1,18 @@
 // components
-import { CardMedia, Paper, Stack, Typography } from "@mui/material";
+import { ArrowDownward, ChevronRight, ChevronRightOutlined, ChevronRightRounded, ChevronRightSharp, ChevronRightTwoTone } from "@mui/icons-material";
+import { CardMedia, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdatePlaying, UpdateTrack, UpdateTrackProgress } from "../../redux/actions/currentTrack";
-import { UpdatePlaylist, UpdatePlaylistTracks } from "../../redux/actions/playlist";
+import { UpdatePlaylistTracks } from "../../redux/actions/playlist";
+import { shuffle as onShuffle } from "../../utils/utils";
 import Controls from "./components/Controls";
 import ProgressBar from "./components/ProgressBar";
-import { shuffle as onShuffle } from "../../utils/utils";
 
 const Cover = styled(Stack)({
-  position: "absolute",
-  top: -60,
+  // position: "absolute",
+  // top: -100,
   width: "100%",
   display: "flex",
   alignItems: "center",
@@ -25,17 +26,24 @@ const CoverMedia = styled(CardMedia)({
 });
 
 const Container = styled(Paper)({
-  position: "fixed",
-  bottom: 0,
-  left: 0,
-  width: "100vw",
-  height: 220,
+  width: "100%",
+  height: 230,
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-end",
   alignItems: "center",
   padding: 20,
   boxSizing: "border-box",
+  marginTop: "auto",
+});
+
+const SmallContainer = styled(Paper)({
+  width: "100%",
+  height: 60,
+  display: "flex",
+  alignItems: "center",
+  columnGap: 3,
+  marginTop: "auto",
 });
 
 const Player = () => {
@@ -126,16 +134,52 @@ const Player = () => {
     dispatch(UpdateTrack(0));
   }, [shuffle]);
 
+  // minimize player
+  const [minimize, setMinimize] = useState(false);
+  const hidePlayer = () => setMinimize(!minimize);
+  const rotate = minimize ? "rotate(270deg)" : "rotate(90deg)";
+
   return (
-    <Container elevation={3}>
-      <Cover>
-        <CoverMedia component="img" image={coverArt} height="120"></CoverMedia>
-        <Typography variant="h6">{title}</Typography>
-        <Typography variant="body2">{artist}</Typography>
-      </Cover>
-      <ProgressBar duration={duration} audioRef={audioRef} intervalRef={intervalRef} startTimer={startTimer} />
-      <Controls onNext={onNext} onPrev={onPrev} />
-    </Container>
+    <>
+      {!minimize ? (
+        <Container elevation={3}>
+          <Cover>
+            <CoverMedia component="img" image={coverArt} height="120"></CoverMedia>
+            <Typography variant="h6">{title}</Typography>
+            <Typography variant="body2">{artist}</Typography>
+          </Cover>
+          <IconButton
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              transform: rotate,
+              transition: "all 1s ease-out",
+            }}
+            onClick={hidePlayer}
+          >
+            <ChevronRight />
+          </IconButton>
+          <ProgressBar duration={duration} audioRef={audioRef} intervalRef={intervalRef} startTimer={startTimer} />
+          <Controls onNext={onNext} onPrev={onPrev} />
+        </Container>
+      ) : (
+        <SmallContainer>
+          {/* <CoverMedia component="img" image={coverArt} height="40" /> */}
+          <Controls onNext={onNext} onPrev={onPrev} small={minimize} />
+          <ProgressBar duration={duration} audioRef={audioRef} intervalRef={intervalRef} startTimer={startTimer} />
+          <IconButton
+            style={{
+              transform: rotate,
+              transition: "all 1s ease-out",
+            }}
+            onClick={hidePlayer}
+          >
+            <ChevronRight />
+          </IconButton>
+        </SmallContainer>
+      )}
+    </>
   );
 };
 

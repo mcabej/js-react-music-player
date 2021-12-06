@@ -1,4 +1,4 @@
-import { Button, ButtonBase, Card, Container, Paper, Typography } from "@mui/material";
+import { Button, ButtonBase, Card, Container, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -31,8 +31,8 @@ const Playlist = () => {
   };
 
   return (
-    <Container sx={{ p: 0 }}>
-      <Button size="small" variant="contained" onClick={() => navigate("/new")}>
+    <Stack>
+      <Button size="small" variant="contained" onClick={() => navigate("/new")} style={{ width: 134, marginLeft: "auto" }}>
         Create playlist
       </Button>
       {playlist.map((obj) => {
@@ -49,7 +49,7 @@ const Playlist = () => {
           </>
         );
       })}
-    </Container>
+    </Stack>
   );
 };
 

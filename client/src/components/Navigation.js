@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Stack, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const NavItem = styled("a")(({ active, lastItem }) => ({
+const NavItem = styled("a")(({ active }) => ({
   fontSize: 18,
   color: active ? "#fff" : "#c4c4c4",
   padding: 10,
@@ -28,7 +28,11 @@ const Navigation = () => {
   };
 
   return (
-    <Stack direction="row" divider={<Divider orientation="vertical" style={{ height: "100%" }} />}>
+    <Stack
+      direction="row"
+      divider={<Divider orientation="vertical" variant="middle" flexItem />}
+      style={{ display: "flex", alignItems: "center", margin: 5, marginTop: 5 }}
+    >
       <NavItem onClick={() => navigate("/")} active={isActive("/")}>
         Playlist
       </NavItem>

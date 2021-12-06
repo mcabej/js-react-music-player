@@ -6,7 +6,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdatePlaying, UpdateShuffle } from "../../../redux/actions/currentTrack";
 
-const Controls = ({ onNext, onPrev }) => {
+const Controls = ({ onNext, onPrev, small }) => {
   const currentTrack = useSelector((state) => state.currentTrack.data);
 
   // currently playing state
@@ -37,7 +37,7 @@ const Controls = ({ onNext, onPrev }) => {
           <ShuffleOn />
         </IconButton>
       ) : (
-        <IconButton sx={{ marginLeft: 10 }} onClick={() => onShuffle(true)}>
+        <IconButton sx={{ marginLeft: 0 }} onClick={() => onShuffle(true)}>
           <Shuffle />
         </IconButton>
       )}

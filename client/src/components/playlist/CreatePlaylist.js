@@ -101,7 +101,7 @@ const CreatePlaylist = () => {
           </Table>
         </TableContainer>
       )}
-      <Snackbar open={openSnack} onClose={() => setOpenSnack(false)} autoHideDuration={1000} message={"Song added to playlist"} />
+      <Snackbar open={openSnack} onClose={() => setOpenSnack(false)} autoHideDuration={500} message={"Song added to playlist"} />
     </>
   );
 };

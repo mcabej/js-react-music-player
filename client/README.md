@@ -1,44 +1,59 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+## Music Player
 
-## Available Scripts
+[Live Demo](https://qa-music-player.netlify.app/)
 
-In the project directory, you can run:
+# Project Outputs and Deliverables
 
-### `npm start`
+Once completed, to demonstrate completion of the tasks you will be asked to provide a series of outputs, that should be submitted together with the synoptic project declaration
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Plan**
+  - [x] Create a plan, diagram or sketch based on the business requirements
+  - [ ] Create appropriate sequence diagrams
+- **Install / Configure**
+  - [x] Data Models
+  - [x] User interface design
+  - [x] Application code
+  - [x] Data structures
+- **Test**
+  - [ ] Capture the test case and results
+  - [x] Documenting your approach and results
+  - [x] Develop and test software and user interfaces
+- **Implement**
+  - [ ] Provide documentation for further development, improvements and maintenance
+  - [ ] Provide documentation of assumptions and limitations
+  - [ ] Create a user guide document for the key users
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+# Business Requirements
 
-### `npm test`
+- **List of requirements**
+  - [x] Allow music playback
+  - [x] Allow music playback when the device becomes idle. The device will automatically
+        switch to idle mode to save power if no user interaction is recorded over a 30 second
+        period
+  - [x] Have a random shuffle function
+  - [ ] Have a search option for audio files within a media database
+  - [x] List display options by song track or album
+  - [x] Allow for a Creation of a song play list
+  - [x] Have user control over playback
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# UI Design
 
-### `npm run build`
+- **Figma**
+  [https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FL8ZnMBSQsZ4CqoNr0z409M%2FMusic-Player%3Fnode-id%3D0%253A1](https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FL8ZnMBSQsZ4CqoNr0z409M%2FMusic-Player%3Fnode-id%3D0%253A1)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Plan
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+The music player will be a web application. The following are my course of actions:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Choose appropriate tech stack**
+  1. React
+  2. Redux
+  3. Material UI
+  4. Jest
+  5. MongoDB
+- **Design component architecture**
+  ![component_architecture.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a1a557e0-d603-4840-9c6a-2449a4eaefa0/component_architecture.jpg)
+- **Create class diagram**
+  ![class_diagram.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1983ed7d-40ab-4b7b-850c-07734f129153/class_diagram.jpg)
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[Tasks](https://www.notion.so/cca01c5ef27745f1ac8718d917474aa6)

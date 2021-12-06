@@ -52,7 +52,6 @@ const Player = () => {
   // states
   const playlist = useSelector((state) => state.playlist.data);
   const currentTrack = useSelector((state) => state.currentTrack.data);
-
   // currently playing state
   const { isPlaying, trackIndex, playlistIndex, shuffle, trackProgress } = currentTrack;
   // currently active playlist
@@ -81,6 +80,15 @@ const Player = () => {
     }, [1000]);
   };
 
+  useEffect(() => {
+    // Pause and clean up on unmount
+    return () => {
+      audioRef.current.pause();
+      dispatch(UpdatePlaying(false));
+      clearInterval(intervalRef.current);
+    };
+  }, []);
+
   // Play pause observer
   useEffect(() => {
     if (isPlaying) {
@@ -91,15 +99,6 @@ const Player = () => {
       audioRef.current.pause();
     }
   }, [isPlaying]);
-
-  useEffect(() => {
-    // Pause and clean up on unmount
-    return () => {
-      audioRef.current.pause();
-      dispatch(UpdatePlaying(false));
-      clearInterval(intervalRef.current);
-    };
-  }, []);
 
   // Track index observer
   useEffect(() => {
@@ -133,6 +132,12 @@ const Player = () => {
     dispatch(UpdatePlaylistTracks({ index: playlistIndex, tracks: [currentTrack, ...withoutCurrent] }));
     dispatch(UpdateTrack(0));
   }, [shuffle]);
+
+  // Playlist index observer
+  useEffect(() => {
+    audioRef.current.pause();
+    audioRef.current = new Audio(source);
+  }, [playlistIndex]);
 
   // minimize player
   const [minimize, setMinimize] = useState(false);

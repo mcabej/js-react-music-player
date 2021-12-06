@@ -5,12 +5,14 @@ import { useSelector } from "react-redux";
 
 const Songs = () => {
   const tracks = useSelector((state) => state.tracks.data);
-  tracks.sort((a, b) => a.title.localeCompare(b.title));
+  const sortedTracks = [...tracks].sort((a, b) => a.title.localeCompare(b.title));
 
   const [result, setResult] = useState(tracks);
 
   const handleSearch = (val) => {
-    let newTrack = tracks.filter((obj) => obj.title.toLowerCase().includes(val) || obj.artist.toLowerCase().includes(val));
+    let newTrack = sortedTracks.filter(
+      (obj) => obj.title.toLowerCase().includes(val.toLowerCase()) || obj.artist.toLowerCase().includes(val.toLowerCase())
+    );
     setResult(newTrack);
   };
 

@@ -33,11 +33,11 @@ const Controls = ({ onNext, onPrev, small }) => {
         <SkipNext />
       </IconButton>
       {shuffle ? (
-        <IconButton sx={{ marginLeft: 10 }} onClick={() => onShuffle(false)}>
+        <IconButton onClick={() => onShuffle(false)}>
           <ShuffleOn />
         </IconButton>
       ) : (
-        <IconButton sx={{ marginLeft: 0 }} onClick={() => onShuffle(true)}>
+        <IconButton onClick={() => onShuffle(true)}>
           <Shuffle />
         </IconButton>
       )}

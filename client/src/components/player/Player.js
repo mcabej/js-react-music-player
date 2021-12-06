@@ -80,13 +80,16 @@ const Player = () => {
     }, [1000]);
   };
 
+  const reset = () => {
+    audioRef.current.pause();
+    dispatch(UpdatePlaying(false));
+    clearInterval(intervalRef.current);
+    dispatch(UpdateTrackProgress(audioRef.current.currentTime));
+  };
+
+  // Pause and clean up on unmount
   useEffect(() => {
-    // Pause and clean up on unmount
-    return () => {
-      audioRef.current.pause();
-      dispatch(UpdatePlaying(false));
-      clearInterval(intervalRef.current);
-    };
+    reset();
   }, []);
 
   // Play pause observer
@@ -135,7 +138,7 @@ const Player = () => {
 
   // Playlist index observer
   useEffect(() => {
-    audioRef.current.pause();
+    reset();
     audioRef.current = new Audio(source);
   }, [playlistIndex]);
 
@@ -170,7 +173,6 @@ const Player = () => {
         </Container>
       ) : (
         <SmallContainer>
-          {/* <CoverMedia component="img" image={coverArt} height="40" /> */}
           <Controls onNext={onNext} onPrev={onPrev} small={minimize} />
           <ProgressBar duration={duration} audioRef={audioRef} intervalRef={intervalRef} startTimer={startTimer} />
           <IconButton

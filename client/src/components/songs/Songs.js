@@ -1,14 +1,39 @@
-import { CardMedia, Stack, Typography, Paper } from "@mui/material";
-import React from "react";
+import { CardMedia, Stack, Typography, Paper, TextField, InputAdornment } from "@mui/material";
+import { Search } from "@mui/icons-material";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 const Songs = () => {
   const tracks = useSelector((state) => state.tracks.data);
+  tracks.sort((a, b) => a.title.localeCompare(b.title));
+
+  const [result, setResult] = useState(tracks);
+
+  const handleSearch = (val) => {
+    let newTrack = tracks.filter((obj) => obj.title.toLowerCase().includes(val) || obj.artist.toLowerCase().includes(val));
+    setResult(newTrack);
+  };
 
   return (
     <Stack>
       <Typography variant="h6">All Songs</Typography>
-      {tracks.map((obj) => {
+      <TextField
+        variant="standard"
+        placeholder="Title or artist..."
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search />
+            </InputAdornment>
+          ),
+        }}
+        sx={{ mt: 1, mb: 1 }}
+        onChange={(e) => {
+          const { value } = e.target;
+          handleSearch(value);
+        }}
+      />
+      {result.map((obj) => {
         return (
           <Stack direction="row" spacing={1}>
             {obj.title !== "" && (
